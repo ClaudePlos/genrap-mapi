@@ -9,6 +9,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import pl.kskowronski.data.entity.Report;
+import pl.kskowronski.data.service.admin.ReportRunService;
 import pl.kskowronski.data.service.admin.ReportService;
 import pl.kskowronski.views.MainLayout;
 import pl.kskowronski.views.admin.component.DialogReportView;
@@ -20,8 +21,10 @@ import javax.annotation.security.RolesAllowed;
 @RolesAllowed("admin")
 public class ReportView  extends VerticalLayout {
 
+    private ReportRunService reportRunService;
 
-    public ReportView(ReportService reportService) {
+    public ReportView(ReportService reportService, ReportRunService reportRunService) {
+        this.reportRunService = reportRunService;
         var crudReport = new GridCrud<>(Report.class, reportService);
         //crudReport.setFindAllOperation(() -> reportService.findAll());
         add(crudReport);
@@ -36,7 +39,7 @@ public class ReportView  extends VerticalLayout {
     }
 
     private void showDialogWithSql(Report report){
-        var dialog = new DialogReportView();
+        var dialog = new DialogReportView(reportRunService);
         dialog.open(report);
     }
 
