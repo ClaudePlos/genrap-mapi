@@ -24,6 +24,7 @@ import java.util.Optional;
 import pl.kskowronski.data.entity.User;
 import pl.kskowronski.security.AuthenticatedUser;
 import pl.kskowronski.views.about.AboutView;
+import pl.kskowronski.views.admin.ReportView;
 import pl.kskowronski.views.cardlist.CardListView;
 import pl.kskowronski.views.dashboard.DashboardView;
 import pl.kskowronski.views.helloworld.HelloWorldView;
@@ -120,14 +121,11 @@ public class MainLayout extends AppLayout {
     private List<RouterLink> createLinks() {
         MenuItemInfo[] menuItems = new MenuItemInfo[]{ //
                 new MenuItemInfo("Hello World", "la la-globe", HelloWorldView.class), //
-
                 new MenuItemInfo("Card List", "la la-list", CardListView.class), //
-
                 new MenuItemInfo("About", "la la-file", AboutView.class), //
-
                 new MenuItemInfo("Person Form", "la la-user", PersonFormView.class), //
-
                 new MenuItemInfo("Dashboard", "la la-chart-area", DashboardView.class), //
+                new MenuItemInfo("(A) Raporty", "la la-chart-area", ReportView.class), //
 
         };
         List<RouterLink> links = new ArrayList<>();
@@ -166,7 +164,7 @@ public class MainLayout extends AppLayout {
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
 
-            Avatar avatar = new Avatar(user.getName(), user.getProfilePictureUrl());
+            Avatar avatar = new Avatar(user.getName());
             avatar.addClassNames("me-xs");
 
             ContextMenu userMenu = new ContextMenu(avatar);
