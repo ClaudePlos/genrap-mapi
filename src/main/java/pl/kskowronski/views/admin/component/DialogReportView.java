@@ -7,9 +7,11 @@ import com.google.gson.JsonObject;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import pl.kskowronski.data.entity.Report;
 import pl.kskowronski.data.service.admin.ReportRunService;
+import pl.kskowronski.data.service.admin.ReportService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,20 +21,30 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DialogReportView extends Dialog {
 
+    private ReportService reportService;
     private ReportRunService reportRunService;
 
     private Grid<Map<String, String>> grid = new Grid<>();
+    private TextArea textSql = new TextArea();
+    private Report report;
 
-    public DialogReportView(ReportRunService reportRunService) {
+    private HorizontalLayout h01 = new HorizontalLayout();
+
+
+    public DialogReportView(ReportRunService reportRunService, ReportService reportService) {
         this.reportRunService = reportRunService;
+        this.reportService = reportService;
         setWidth("1000px");
         setHeight("600px");
     }
 
     public void open(Report report ) {
+        this.report = report;
         int charLimit = 1400000;
-        var textSql = new TextArea();
+
         textSql.setLabel("Sql");
+        textSql.setWidth("100%");
+        textSql.setHeight("200px");
         textSql.setValue(report.getRapSql());
         textSql.addValueChangeListener(e -> {
             e.getSource().setHelperText(e.getValue().length() + "/" + charLimit);
@@ -41,10 +53,19 @@ public class DialogReportView extends Dialog {
         var buttonRun = new Button("Run");
         buttonRun.addClickListener( e -> runSql(textSql.getValue()));
         var buttonSave = new Button("Save");
+        buttonRun.addClickListener( e -> saveReport());
+        var buttonParams = new Button("Params");
+        buttonParams.addClickListener( e -> saveReport());
 
-        add(textSql, buttonRun, buttonSave);
+        h01.add(buttonRun, buttonSave);
+        add(textSql, buttonRun, buttonParams, buttonSave);
         add(grid);
         open();
+    }
+
+    private void saveReport() {
+        report.setRapSql(textSql.getValue());
+        reportService.update(report);
     }
 
     private void runSql( String sqlQuery ){
@@ -76,6 +97,9 @@ public class DialogReportView extends Dialog {
 
         grid.setItems(items);
 
+    }
+
+    private void openDialogAddParams() {
 
     }
 
