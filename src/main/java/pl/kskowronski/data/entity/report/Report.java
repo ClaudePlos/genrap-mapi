@@ -1,4 +1,4 @@
-package pl.kskowronski.data.entity;
+package pl.kskowronski.data.entity.report;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

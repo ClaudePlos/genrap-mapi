@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
-import pl.kskowronski.data.entity.ReportDetail;
+import pl.kskowronski.data.entity.report.ReportDetail;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

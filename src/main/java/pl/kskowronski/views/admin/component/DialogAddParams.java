@@ -1,5 +1,6 @@
 package pl.kskowronski.views.admin.component;
 
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.crud.BinderCrudEditor;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -7,8 +8,8 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import org.springframework.beans.factory.annotation.Autowired;
-import pl.kskowronski.data.entity.ReportDetail;
+import pl.kskowronski.data.entity.report.ParamType;
+import pl.kskowronski.data.entity.report.ReportDetail;
 import com.vaadin.flow.component.crud.Crud;
 import com.vaadin.flow.component.crud.CrudEditor;
 import pl.kskowronski.data.service.admin.reportDetail.ReportDetailDataProvider;
@@ -91,19 +92,29 @@ public class DialogAddParams extends Dialog {
     private CrudEditor<ReportDetail> createEditor() {
 
         TextField textRapId      = new TextField("RapId");
-        TextField textType      = new TextField("Typ");
+        ComboBox<ParamType> pType = getParamType();
         TextField textParamName = new TextField("Nazwa parametru");
         TextField textSql       = new TextField("Sql");
 
-        FormLayout form = new FormLayout(textRapId, textType, textParamName, textSql);
+        FormLayout form = new FormLayout(textRapId, pType, textParamName, textSql);
 
-        binder.forField(textRapId).asRequired().bind(ReportDetail::getRapId, ReportDetail::setRapId);
-        binder.forField(textType).asRequired().bind(ReportDetail::getSrpTyp, ReportDetail::setSrpTyp);
+        binder.forField(pType).asRequired().bind(ReportDetail::getType, ReportDetail::setType);
         binder.forField(textParamName).asRequired().bind(ReportDetail::getSrpName, ReportDetail::setSrpName);
         binder.forField(textSql).asRequired().bind(ReportDetail::getSrpSql, ReportDetail::setSrpSql);
 
+        binder.forField(textRapId).asRequired().bind(ReportDetail::getRapId, ReportDetail::setRapId);
+
         return new BinderCrudEditor<>(binder, form);
 
+    }
+
+
+    private ComboBox<ParamType> getParamType() {
+        ComboBox<ParamType> comboSK = new ComboBox<>();
+        comboSK.setItems(ParamType.values());
+        comboSK.setItemLabelGenerator(ParamType::name);
+        comboSK.setLabel("Typ");
+        return comboSK;
     }
 
 }

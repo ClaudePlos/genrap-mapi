@@ -3,7 +3,7 @@ package pl.kskowronski.data.service.admin.reportDetail;
 
 import com.vaadin.flow.component.crud.CrudFilter;
 import com.vaadin.flow.data.provider.AbstractBackEndDataProvider;
-import pl.kskowronski.data.entity.ReportDetail;
+import pl.kskowronski.data.entity.report.ReportDetail;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.SortDirection;
 import java.lang.reflect.Field;

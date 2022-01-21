@@ -2,7 +2,7 @@ package pl.kskowronski.data.service.admin.reportDetail;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
-import pl.kskowronski.data.entity.ReportDetail;
+import pl.kskowronski.data.entity.report.ReportDetail;
 
 import java.math.BigDecimal;
 import java.util.List;

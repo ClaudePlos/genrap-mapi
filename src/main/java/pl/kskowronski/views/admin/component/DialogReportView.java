@@ -12,8 +12,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import pl.kskowronski.data.entity.Report;
-import pl.kskowronski.data.entity.ReportDetail;
+import pl.kskowronski.data.entity.report.ParamType;
+import pl.kskowronski.data.entity.report.Report;
+import pl.kskowronski.data.entity.report.ReportDetail;
 import pl.kskowronski.data.service.admin.ReportRunService;
 import pl.kskowronski.data.service.admin.ReportService;
 import pl.kskowronski.data.service.admin.reportDetail.ReportDetailService;
@@ -133,7 +134,7 @@ public class DialogReportView extends Dialog {
 
     private void addParamToReport(ReportDetail detail) {
 
-        if ( detail.getSrpTyp().equals("NAPIS") ) {
+        if ( detail.getSrpTyp().equals(ParamType.NAPIS.name()) ) {
             TextField t = new TextField();
             t.setLabel(detail.getSrpName());
             t.setValueChangeMode(ValueChangeMode.EAGER);
@@ -144,7 +145,7 @@ public class DialogReportView extends Dialog {
             add(t);
         }
 
-        if ( detail.getSrpTyp().equals("DATA") ) {
+        if ( detail.getSrpTyp().equals(ParamType.DATA.name()) ) {
             TextField t = new TextField();
             t.setLabel(detail.getSrpName());
             t.setValueChangeMode(ValueChangeMode.EAGER);

@@ -1,7 +1,7 @@
 package pl.kskowronski.data.service.admin.reportDetail;
 
 import org.springframework.stereotype.Service;
-import pl.kskowronski.data.entity.ReportDetail;
+import pl.kskowronski.data.entity.report.ReportDetail;
 
 import java.math.BigDecimal;
 import java.util.List;

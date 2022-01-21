@@ -1,4 +1,4 @@
-package pl.kskowronski.data.entity;
+package pl.kskowronski.data.entity.report;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -31,6 +31,9 @@ public class ReportDetail {
 
     @Transient
     private String rapId;
+
+    @Transient
+    private ParamType type;
 
     @Transient
     private String stringValue;
@@ -95,7 +98,10 @@ public class ReportDetail {
     }
 
     public String getRapId() {
-        return srpRapId.toString();
+        if (srpRapId != null)
+            return srpRapId.toString();
+        else
+            return null;
     }
 
     public void setRapId(String rapId) {
@@ -109,5 +115,14 @@ public class ReportDetail {
 
     public void setStringValue(String stringValue) {
         this.stringValue = stringValue;
+    }
+
+    public ParamType getType() {
+        return type;
+    }
+
+    public void setType(ParamType type) {
+        this.type = type;
+        this.setSrpTyp(type.name());
     }
 }

@@ -2,7 +2,7 @@ package pl.kskowronski.data.service.admin;
 
 import org.springframework.stereotype.Service;
 import org.vaadin.crudui.crud.CrudListener;
-import pl.kskowronski.data.entity.Report;
+import pl.kskowronski.data.entity.report.Report;
 
 import java.util.List;
 
