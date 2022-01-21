@@ -26,9 +26,9 @@ public class ReportDetailDataProvider extends AbstractBackEndDataProvider<Report
     private Consumer<Long> sizeChangeListener;
 
 
-    public ReportDetailDataProvider(ReportDetailService reportDetailService) {
+    public ReportDetailDataProvider(ReportDetailService reportDetailService, BigDecimal idRap) {
         this.reportDetailService = reportDetailService;
-        DATABASE = new ArrayList<>(reportDetailService.findAll());
+        DATABASE = new ArrayList<>(reportDetailService.findReportDetailBySrpRapId(idRap));
         DATABASE.stream().forEach( item -> {
            // item.setUser(userService.findById(item.getPrcId()).get());
            // item.setSk(skService.findBySkKod(item.getSkKod()));

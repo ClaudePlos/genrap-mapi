@@ -8,6 +8,7 @@ import org.vaadin.crudui.crud.impl.GridCrud;
 import pl.kskowronski.data.entity.Report;
 import pl.kskowronski.data.service.admin.ReportRunService;
 import pl.kskowronski.data.service.admin.ReportService;
+import pl.kskowronski.data.service.admin.reportDetail.ReportDetailService;
 import pl.kskowronski.views.MainLayout;
 import pl.kskowronski.views.admin.component.DialogReportView;
 
@@ -20,10 +21,12 @@ public class ReportView  extends VerticalLayout {
 
     private ReportService reportService;
     private ReportRunService reportRunService;
+    private ReportDetailService reportDetailService;
 
-    public ReportView(ReportService reportService, ReportRunService reportRunService) {
+    public ReportView(ReportService reportService, ReportRunService reportRunService, ReportDetailService reportDetailService) {
         this.reportService = reportService;
         this.reportRunService = reportRunService;
+        this.reportDetailService = reportDetailService;
         var crudReport = new GridCrud<>(Report.class, reportService);
         //crudReport.setFindAllOperation(() -> reportService.findAll());
         add(crudReport);
@@ -38,7 +41,7 @@ public class ReportView  extends VerticalLayout {
     }
 
     private void showDialogWithSql(Report report){
-        var dialog = new DialogReportView(reportRunService, reportService);
+        var dialog = new DialogReportView(reportRunService, reportService, reportDetailService);
         dialog.open(report);
     }
 

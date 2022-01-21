@@ -1,9 +1,6 @@
 package pl.kskowronski.data.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
@@ -20,17 +17,23 @@ public class ReportDetail {
     @Column(name="SRP_TYP")
     private String srpTyp;
 
-    @Column(name="SRP_NAME")
+    @Column(name="SRP_NAZWA")
     private String srpName;
 
     @Column(name="SRP_SQL")
     private String srpSql;
 
-    @Column(name="SRP_OUTER")
+    @Column(name="SRP_F_OUTER")
     private String srpOuter;
 
     @Column(name="SRP_FORMULA")
     private String srpFormula;
+
+    @Transient
+    private String rapId;
+
+    @Transient
+    private String stringValue;
 
     public ReportDetail() {
     }
@@ -89,5 +92,22 @@ public class ReportDetail {
 
     public void setSrpFormula(String srpFormula) {
         this.srpFormula = srpFormula;
+    }
+
+    public String getRapId() {
+        return srpRapId.toString();
+    }
+
+    public void setRapId(String rapId) {
+        this.rapId = rapId;
+        this.srpRapId = BigDecimal.valueOf(Long.parseLong(rapId));
+    }
+
+    public String getStringValue() {
+        return stringValue;
+    }
+
+    public void setStringValue(String stringValue) {
+        this.stringValue = stringValue;
     }
 }

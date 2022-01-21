@@ -7,22 +7,30 @@ import com.google.gson.JsonObject;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import pl.kskowronski.data.entity.Report;
+import pl.kskowronski.data.entity.ReportDetail;
 import pl.kskowronski.data.service.admin.ReportRunService;
 import pl.kskowronski.data.service.admin.ReportService;
+import pl.kskowronski.data.service.admin.reportDetail.ReportDetailService;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class DialogReportView extends Dialog {
 
     private ReportService reportService;
     private ReportRunService reportRunService;
+    private ReportDetailService reportDetailService;
 
     private Grid<Map<String, String>> grid = new Grid<>();
     private TextArea textSql = new TextArea();
@@ -30,8 +38,11 @@ public class DialogReportView extends Dialog {
 
     private HorizontalLayout h01 = new HorizontalLayout();
 
+    public List<ReportDetail> paramList = new ArrayList<>();
 
-    public DialogReportView(ReportRunService reportRunService, ReportService reportService) {
+
+    public DialogReportView(ReportRunService reportRunService, ReportService reportService,  ReportDetailService reportDetailService) {
+        this.reportDetailService = reportDetailService;
         this.reportRunService = reportRunService;
         this.reportService = reportService;
         setWidth("1000px");
@@ -53,12 +64,13 @@ public class DialogReportView extends Dialog {
         var buttonRun = new Button("Run");
         buttonRun.addClickListener( e -> runSql(textSql.getValue()));
         var buttonSave = new Button("Save");
-        buttonRun.addClickListener( e -> saveReport());
+        buttonSave.addClickListener( e -> saveReport());
         var buttonParams = new Button("Params");
-        buttonParams.addClickListener( e -> saveReport());
+        buttonParams.addClickListener( e -> openDialogAddParams());
 
-        h01.add(buttonRun, buttonSave);
-        add(textSql, buttonRun, buttonParams, buttonSave);
+        h01.add(buttonRun, buttonParams, buttonSave);
+        add(textSql, h01);
+        setupParameters();
         add(grid);
         open();
     }
@@ -66,13 +78,14 @@ public class DialogReportView extends Dialog {
     private void saveReport() {
         report.setRapSql(textSql.getValue());
         reportService.update(report);
+        Notification.show("Zapisano");
     }
 
     private void runSql( String sqlQuery ){
         grid.removeAllColumns();
         Gson gson = new Gson(); // Creates new instance of Gson
         List<Map<String, String>> items = new ArrayList<>();
-        var response = reportRunService.getDataFromSqlQuery(sqlQuery);
+        var response = reportRunService.getDataFromSqlQuery(sqlQuery, paramList);
 
         AtomicInteger j = new AtomicInteger();
         response.forEach( row -> {
@@ -100,8 +113,50 @@ public class DialogReportView extends Dialog {
     }
 
     private void openDialogAddParams() {
-        var dialogAddParams = new DialogAddParams();
-        dialogAddParams.open();
+        var dialogAddParams = new DialogAddParams(reportDetailService, report.getId());
+        dialogAddParams.open(report.getId());
+    }
+
+
+
+    private void setupParameters() {
+        paramList  = reportDetailService.findReportDetailBySrpRapId(report.getId());
+        paramList.stream().forEach( item -> {
+            addParamToReport(item);
+        });
+
+    }
+
+    private void updateValueForParam(BigDecimal paramId, String value){
+        paramList.stream().filter(item -> item.getSrpId().equals(paramId)).collect(Collectors.toList()).get(0).setStringValue(value);
+    }
+
+    private void addParamToReport(ReportDetail detail) {
+
+        if ( detail.getSrpTyp().equals("NAPIS") ) {
+            TextField t = new TextField();
+            t.setLabel(detail.getSrpName());
+            t.setValueChangeMode(ValueChangeMode.EAGER);
+            t.setId(detail.getSrpId().toString());
+            t.addValueChangeListener(event -> {
+                updateValueForParam(BigDecimal.valueOf(Long.valueOf(t.getId().get())), t.getValue());
+            });
+            add(t);
+        }
+
+        if ( detail.getSrpTyp().equals("DATA") ) {
+            TextField t = new TextField();
+            t.setLabel(detail.getSrpName());
+            t.setValueChangeMode(ValueChangeMode.EAGER);
+            t.setId(detail.getSrpId().toString());
+            t.addValueChangeListener(event -> {
+                paramList.stream().filter(
+                        item -> item.getSrpId().equals(t.getId())).collect(Collectors.toList()).get(0).setStringValue(t.getValue()
+                );
+            });
+            add(t);
+        }
+
     }
 
 

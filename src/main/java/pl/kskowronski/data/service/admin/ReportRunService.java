@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
+import pl.kskowronski.data.entity.ReportDetail;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,10 +16,16 @@ public class ReportRunService {
     @PersistenceContext
     private EntityManager em;
 
-    public JsonArray getDataFromSqlQuery( String sqlQuery ) {
+    public JsonArray getDataFromSqlQuery(String sqlQuery, List<ReportDetail> paramList) {
         Gson gson = new Gson();
         String[] cellName = sqlQuery.split(" ");
-        String sql = sqlQuery;
+        String sql= sqlQuery;
+
+        //put parameters to sql
+        for ( ReportDetail param : paramList ) {
+            sql = sql.replaceAll(":"+param.getSrpName(), "'"+param.getStringValue()+"'");
+        }
+
         List<Object[]> result = em.createNativeQuery(sql).getResultList();
 
         JsonArray jsonArray = new Gson().fromJson(gson.toJson(result), JsonArray.class);
