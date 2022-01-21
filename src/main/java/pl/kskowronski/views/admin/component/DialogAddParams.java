@@ -18,6 +18,7 @@ import pl.kskowronski.data.service.admin.reportDetail.ReportDetailService;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DialogAddParams extends Dialog {
 
@@ -91,18 +92,20 @@ public class DialogAddParams extends Dialog {
 
     private CrudEditor<ReportDetail> createEditor() {
 
-        TextField textRapId      = new TextField("RapId");
+        TextField textRapId = new TextField("RapId");
         ComboBox<ParamType> pType = getParamType();
         TextField textParamName = new TextField("Nazwa parametru");
         TextField textSql       = new TextField("Sql");
 
-        FormLayout form = new FormLayout(textRapId, pType, textParamName, textSql);
+        //textRapId.setEnabled(false);
+        textRapId.setValue(idRap.toString());
+        textRapId.setLabel("RapID przepisz: " + idRap.toString());
 
+        FormLayout form = new FormLayout(textRapId, pType, textParamName, textSql);
+        binder.forField(textRapId).asRequired().bind(ReportDetail::getRapId, ReportDetail::setRapId);
         binder.forField(pType).asRequired().bind(ReportDetail::getType, ReportDetail::setType);
         binder.forField(textParamName).asRequired().bind(ReportDetail::getSrpName, ReportDetail::setSrpName);
         binder.forField(textSql).asRequired().bind(ReportDetail::getSrpSql, ReportDetail::setSrpSql);
-
-        binder.forField(textRapId).asRequired().bind(ReportDetail::getRapId, ReportDetail::setRapId);
 
         return new BinderCrudEditor<>(binder, form);
 

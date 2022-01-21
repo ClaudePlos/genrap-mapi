@@ -118,7 +118,10 @@ public class ReportDetail {
     }
 
     public ParamType getType() {
-        return type;
+        if (srpTyp != null)
+            return ParamType.valueOf(srpTyp);
+        else
+            return null;
     }
 
     public void setType(ParamType type) {
