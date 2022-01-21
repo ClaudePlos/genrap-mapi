@@ -1,8 +1,9 @@
-package pl.kskowronski.data.service.admin;
+package pl.kskowronski.data.service.admin.reportDetail;
 
 import org.springframework.stereotype.Service;
 import pl.kskowronski.data.entity.ReportDetail;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -18,7 +19,7 @@ public class ReportDetailService {
         return repo.findAll();
     }
 
-    public ReportDetail add(ReportDetail report) {
+    public ReportDetail save(ReportDetail report) {
         return repo.save(report);
     }
 
@@ -28,6 +29,10 @@ public class ReportDetailService {
 
     public void delete(ReportDetail report) {
         repo.delete(report);
+    }
+
+    public void deleteById(BigDecimal id) {
+        repo.deleteById(id);
     }
 
 }

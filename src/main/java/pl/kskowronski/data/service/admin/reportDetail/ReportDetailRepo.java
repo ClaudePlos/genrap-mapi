@@ -1,4 +1,4 @@
-package pl.kskowronski.data.service.admin;
+package pl.kskowronski.data.service.admin.reportDetail;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;

@@ -100,7 +100,8 @@ public class DialogReportView extends Dialog {
     }
 
     private void openDialogAddParams() {
-
+        var dialogAddParams = new DialogAddParams();
+        dialogAddParams.open();
     }
 
 
