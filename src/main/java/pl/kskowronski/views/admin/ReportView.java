@@ -6,11 +6,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import pl.kskowronski.data.entity.report.Report;
-import pl.kskowronski.data.service.admin.ReportRunService;
-import pl.kskowronski.data.service.admin.ReportService;
+import pl.kskowronski.data.service.admin.report.ReportRunService;
+import pl.kskowronski.data.service.admin.report.ReportService;
 import pl.kskowronski.data.service.admin.reportDetail.ReportDetailService;
 import pl.kskowronski.views.MainLayout;
-import pl.kskowronski.views.admin.component.DialogReportView;
+import pl.kskowronski.views.admin.component.ReportDialog;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -32,6 +32,7 @@ public class ReportView  extends VerticalLayout {
         add(crudReport);
         setSizeFull();
         crudReport.getGrid().addComponentColumn( item -> createButtonTestReport(item)).setHeader("");
+        crudReport.getGrid().addComponentColumn( item -> createButtonAddPermission(item)).setHeader("");
     }
 
     private Button createButtonTestReport(Report report) {
@@ -40,8 +41,19 @@ public class ReportView  extends VerticalLayout {
        return buttonOpenDialog;
     }
 
+    private Button createButtonAddPermission(Report report) {
+        var buttonOpenDialogPerm = new Button("Uprawnienia");
+        buttonOpenDialogPerm.addClickListener( e -> showDialogPermissionToReport(report) );
+        return buttonOpenDialogPerm;
+    }
+
     private void showDialogWithSql(Report report){
-        var dialog = new DialogReportView(reportRunService, reportService, reportDetailService);
+        var dialog = new ReportDialog(reportRunService, reportService, reportDetailService);
+        dialog.open(report);
+    }
+
+    private void showDialogPermissionToReport(Report report){
+        var dialog = new ReportDialog(reportRunService, reportService, reportDetailService);
         dialog.open(report);
     }
 

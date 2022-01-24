@@ -10,6 +10,6 @@ import java.util.Optional;
 
 public interface ReportDetailRepo extends JpaRepository<ReportDetail, BigDecimal> {
 
-    Optional<List<ReportDetail>> findReportDetailBySrpRapId(@Param("rapId") BigDecimal rapId);
+    Optional<List<ReportDetail>> findReportDetailBySrpRapIdOrderBySrpLp(@Param("rapId") BigDecimal rapId);
 
 }

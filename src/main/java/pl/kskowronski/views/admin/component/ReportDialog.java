@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -15,19 +16,17 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import pl.kskowronski.data.entity.report.ParamType;
 import pl.kskowronski.data.entity.report.Report;
 import pl.kskowronski.data.entity.report.ReportDetail;
-import pl.kskowronski.data.service.admin.ReportRunService;
-import pl.kskowronski.data.service.admin.ReportService;
+import pl.kskowronski.data.service.admin.report.ReportRunService;
+import pl.kskowronski.data.service.admin.report.ReportService;
 import pl.kskowronski.data.service.admin.reportDetail.ReportDetailService;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class DialogReportView extends Dialog {
+public class ReportDialog extends Dialog {
 
     private ReportService reportService;
     private ReportRunService reportRunService;
@@ -42,10 +41,11 @@ public class DialogReportView extends Dialog {
     public List<ReportDetail> paramList = new ArrayList<>();
 
 
-    public DialogReportView(ReportRunService reportRunService, ReportService reportService,  ReportDetailService reportDetailService) {
+    public ReportDialog(ReportRunService reportRunService, ReportService reportService, ReportDetailService reportDetailService) {
         this.reportDetailService = reportDetailService;
         this.reportRunService = reportRunService;
         this.reportService = reportService;
+        setDraggable(true);
         setWidth("1000px");
         setHeight("600px");
     }
@@ -99,11 +99,9 @@ public class DialogReportView extends Dialog {
                 });
             }
 
-
-
             final Map<String, String> values = new HashMap<>();
             jsonObj.keySet().stream().forEach( i -> {
-                values.put(i, jsonObj.get(i).toString() );
+                values.put(i, jsonObj.get(i).getAsString() );
             });
             items.add(values);
             j.getAndIncrement();
@@ -114,7 +112,7 @@ public class DialogReportView extends Dialog {
     }
 
     private void openDialogAddParams() {
-        var dialogAddParams = new DialogAddParams(reportDetailService, report.getId());
+        var dialogAddParams = new AddParamsDialog(reportDetailService, report.getId());
         dialogAddParams.open(report.getId());
     }
 
@@ -128,8 +126,12 @@ public class DialogReportView extends Dialog {
 
     }
 
-    private void updateValueForParam(BigDecimal paramId, String value){
+    private void updateStringValueForParam(BigDecimal paramId, String value){
         paramList.stream().filter(item -> item.getSrpId().equals(paramId)).collect(Collectors.toList()).get(0).setStringValue(value);
+    }
+
+    private void updateDateValueForParam(BigDecimal paramId, LocalDate value){
+        paramList.stream().filter(item -> item.getSrpId().equals(paramId)).collect(Collectors.toList()).get(0).setDateValue(value);
     }
 
     private void addParamToReport(ReportDetail detail) {
@@ -140,22 +142,19 @@ public class DialogReportView extends Dialog {
             t.setValueChangeMode(ValueChangeMode.EAGER);
             t.setId(detail.getSrpId().toString());
             t.addValueChangeListener(event -> {
-                updateValueForParam(BigDecimal.valueOf(Long.valueOf(t.getId().get())), t.getValue());
+                updateStringValueForParam(BigDecimal.valueOf(Long.valueOf(t.getId().get())), t.getValue());
             });
             add(t);
         }
 
         if ( detail.getSrpTyp().equals(ParamType.DATA.name()) ) {
-            TextField t = new TextField();
-            t.setLabel(detail.getSrpName());
-            t.setValueChangeMode(ValueChangeMode.EAGER);
-            t.setId(detail.getSrpId().toString());
-            t.addValueChangeListener(event -> {
-                paramList.stream().filter(
-                        item -> item.getSrpId().equals(t.getId())).collect(Collectors.toList()).get(0).setStringValue(t.getValue()
-                );
-            });
-            add(t);
+            DatePicker d = new DatePicker();
+            d.setLabel(detail.getSrpName());
+            d.setId(detail.getSrpId().toString());
+            d.addValueChangeListener(event ->
+                        updateDateValueForParam(BigDecimal.valueOf(Long.valueOf(d.getId().get())), d.getValue())
+            );
+            add(d);
         }
 
     }

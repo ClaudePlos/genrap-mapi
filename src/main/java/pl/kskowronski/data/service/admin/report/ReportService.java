@@ -1,4 +1,4 @@
-package pl.kskowronski.data.service.admin;
+package pl.kskowronski.data.service.admin.report;
 
 import org.springframework.stereotype.Service;
 import org.vaadin.crudui.crud.CrudListener;

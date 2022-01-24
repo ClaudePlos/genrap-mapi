@@ -18,15 +18,15 @@ import pl.kskowronski.data.service.admin.reportDetail.ReportDetailService;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class DialogAddParams extends Dialog {
+public class AddParamsDialog extends Dialog {
 
     ReportDetailService reportDetailService;
 
     private Crud<ReportDetail> crudDetails;
     private Binder<ReportDetail> binder = new Binder<>(ReportDetail.class);
 
+    private String SRP_LP = "srpLp";
     private String SRP_TYP = "srpTyp"; //NAPIS, CALKOWITA, DATA
     private String SRP_NAME = "srpName";
     private String SRP_SQL = "srpSql";
@@ -34,11 +34,12 @@ public class DialogAddParams extends Dialog {
 
     private BigDecimal idRap;
 
-    public DialogAddParams(ReportDetailService reportDetailService, BigDecimal idRap) {
+    public AddParamsDialog(ReportDetailService reportDetailService, BigDecimal idRap) {
         this.idRap = idRap;
         this.reportDetailService = reportDetailService;
+        setDraggable(true);
         setWidth("700px");
-        setHeight("500px");
+        setHeight("700px");
         crudDetails = new Crud<>(ReportDetail.class, createEditor());
 
         setupGrid();
@@ -57,6 +58,7 @@ public class DialogAddParams extends Dialog {
 
         // Only show these columns (all columns shown by default):
         List<String> visibleColumns = Arrays.asList(
+                SRP_LP,
                 SRP_TYP,
                 SRP_NAME,
                 SRP_SQL,
@@ -71,6 +73,7 @@ public class DialogAddParams extends Dialog {
 
         // Reorder the columns (alphabetical by default)
         grid.setColumnOrder(
+                grid.getColumnByKey(SRP_LP),
                 grid.getColumnByKey(SRP_TYP),
                 grid.getColumnByKey(SRP_NAME),
                 grid.getColumnByKey(SRP_SQL),
@@ -93,6 +96,7 @@ public class DialogAddParams extends Dialog {
     private CrudEditor<ReportDetail> createEditor() {
 
         TextField textRapId = new TextField("RapId");
+        TextField textLp = new TextField("Lp");
         ComboBox<ParamType> pType = getParamType();
         TextField textParamName = new TextField("Nazwa parametru");
         TextField textSql       = new TextField("Sql");
@@ -101,8 +105,9 @@ public class DialogAddParams extends Dialog {
         textRapId.setValue(idRap.toString());
         textRapId.setLabel("RapID przepisz: " + idRap.toString());
 
-        FormLayout form = new FormLayout(textRapId, pType, textParamName, textSql);
+        FormLayout form = new FormLayout(textRapId, textLp, pType, textParamName, textSql);
         binder.forField(textRapId).asRequired().bind(ReportDetail::getRapId, ReportDetail::setRapId);
+        binder.forField(textLp).asRequired().bind(ReportDetail::getSrpLp, ReportDetail::setSrpLp);
         binder.forField(pType).asRequired().bind(ReportDetail::getType, ReportDetail::setType);
         binder.forField(textParamName).asRequired().bind(ReportDetail::getSrpName, ReportDetail::setSrpName);
         binder.forField(textSql).asRequired().bind(ReportDetail::getSrpSql, ReportDetail::setSrpSql);

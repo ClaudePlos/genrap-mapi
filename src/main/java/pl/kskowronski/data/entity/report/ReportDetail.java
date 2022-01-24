@@ -2,6 +2,7 @@ package pl.kskowronski.data.entity.report;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "nap_reports_details")
@@ -29,6 +30,9 @@ public class ReportDetail {
     @Column(name="SRP_FORMULA")
     private String srpFormula;
 
+    @Column(name="SRP_LP")
+    private BigDecimal srpLp;
+
     @Transient
     private String rapId;
 
@@ -37,6 +41,9 @@ public class ReportDetail {
 
     @Transient
     private String stringValue;
+
+    @Transient
+    private LocalDate dateValue;
 
     public ReportDetail() {
     }
@@ -127,5 +134,21 @@ public class ReportDetail {
     public void setType(ParamType type) {
         this.type = type;
         this.setSrpTyp(type.name());
+    }
+
+    public LocalDate getDateValue() {
+        return dateValue;
+    }
+
+    public void setDateValue(LocalDate dateValue) {
+        this.dateValue = dateValue;
+    }
+
+    public String getSrpLp() {
+        return srpLp != null ? srpLp.toString() : null;
+    }
+
+    public void setSrpLp(String srpLp) {
+        this.srpLp = BigDecimal.valueOf(Long.parseLong(srpLp));
     }
 }

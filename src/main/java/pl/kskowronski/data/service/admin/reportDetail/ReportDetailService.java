@@ -20,7 +20,7 @@ public class ReportDetailService {
     }
 
     public List<ReportDetail> findReportDetailBySrpRapId( BigDecimal rapId) {
-        return repo.findReportDetailBySrpRapId(rapId).get();
+        return repo.findReportDetailBySrpRapIdOrderBySrpLp(rapId).get();
     }
 
     public ReportDetail save(ReportDetail report) {
