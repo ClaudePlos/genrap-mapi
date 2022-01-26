@@ -1,6 +1,7 @@
 package pl.kskowronski.data.service.admin.reportPermission;
 
 import org.springframework.stereotype.Service;
+import pl.kskowronski.data.entity.report.Report;
 import pl.kskowronski.data.entity.report.ReportDetail;
 import pl.kskowronski.data.entity.report.ReportPermission;
 
@@ -27,6 +28,10 @@ public class ReportPermService {
 
     public List<ReportPermission> findReportPermissionByPermRapIdOrderByPermId(BigDecimal rapId) {
         return repo.findReportPermissionByPermRapIdOrderByPermId(rapId).get();
+    }
+
+    public List<ReportPermission> findReportPermissionByPermUserId( BigDecimal userId ) {
+        return repo.findReportPermissionByPermUserId(userId).get();
     }
 
     public ReportPermission save(ReportPermission perm) {

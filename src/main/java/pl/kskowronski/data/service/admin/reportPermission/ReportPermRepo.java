@@ -13,6 +13,8 @@ public interface ReportPermRepo extends JpaRepository<ReportPermission, BigDecim
 
     Optional<List<ReportPermission>> findReportPermissionByPermRapIdOrderByPermId(@Param("rapId") BigDecimal rapId);
 
+    Optional<List<ReportPermission>> findReportPermissionByPermUserId(@Param("userId") BigDecimal userId);
+
     @Query("select coalesce(max(permId), 0)from ReportPermission")
     BigDecimal findMaxId();
 

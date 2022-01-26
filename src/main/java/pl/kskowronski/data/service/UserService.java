@@ -22,6 +22,10 @@ public class UserService {
         return repository.findById(id);
     }
 
+    public User getByUsername(String username ) {
+        return repository.findByUsername( username );
+    }
+
     public List<User> findAll() { return repository.findAll(); }
 
     public User update(User entity) {

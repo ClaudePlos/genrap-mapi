@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.vaadin.crudui.crud.CrudListener;
 import pl.kskowronski.data.entity.report.Report;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -13,6 +14,11 @@ public class ReportService implements CrudListener<Report> {
 
     public ReportService(ReportRepo repo) {
         this.repo = repo;
+    }
+
+    public Report getReportById( BigDecimal repId) {
+        Report rep = repo.getForRepId(repId);
+        return rep;
     }
 
     @Override

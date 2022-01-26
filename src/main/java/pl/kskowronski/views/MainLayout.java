@@ -29,6 +29,7 @@ import pl.kskowronski.views.cardlist.CardListView;
 import pl.kskowronski.views.dashboard.DashboardView;
 import pl.kskowronski.views.helloworld.HelloWorldView;
 import pl.kskowronski.views.personform.PersonFormView;
+import pl.kskowronski.views.user.ReportUserView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -120,7 +121,7 @@ public class MainLayout extends AppLayout {
 
     private List<RouterLink> createLinks() {
         MenuItemInfo[] menuItems = new MenuItemInfo[]{ //
-                new MenuItemInfo("Hello World", "la la-globe", HelloWorldView.class), //
+                new MenuItemInfo("Raporty", "la la-globe", ReportUserView.class), //
                 new MenuItemInfo("Card List", "la la-list", CardListView.class), //
                 new MenuItemInfo("About", "la la-file", AboutView.class), //
                 new MenuItemInfo("Person Form", "la la-user", PersonFormView.class), //
