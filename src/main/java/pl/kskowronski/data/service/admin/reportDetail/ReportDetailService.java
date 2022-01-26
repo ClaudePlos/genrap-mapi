@@ -1,6 +1,11 @@
 package pl.kskowronski.data.service.admin.reportDetail;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.stereotype.Service;
+import pl.kskowronski.data.entity.report.ParamType;
 import pl.kskowronski.data.entity.report.ReportDetail;
 
 import java.math.BigDecimal;
@@ -38,5 +43,27 @@ public class ReportDetailService {
     public void deleteById(BigDecimal id) {
         repo.deleteById(id);
     }
+
+
+    public Component getComponentForParameter(ReportDetail detail) {
+
+        if ( detail.getSrpTyp().equals(ParamType.NAPIS.name()) ) {
+            TextField t = new TextField();
+            t.setLabel(detail.getSrpName());
+            t.setValueChangeMode(ValueChangeMode.EAGER);
+            t.setId(detail.getSrpId().toString());
+            return t;
+        }
+
+        if ( detail.getSrpTyp().equals(ParamType.DATA.name()) ) {
+            DatePicker d = new DatePicker();
+            d.setLabel(detail.getSrpName());
+            d.setId(detail.getSrpId().toString());
+           return d;
+        }
+
+        return null;
+    }
+
 
 }
