@@ -13,7 +13,7 @@ import pl.kskowronski.data.service.admin.reportDetail.ReportDetailService;
 import pl.kskowronski.data.service.admin.reportPermission.ReportPermService;
 import pl.kskowronski.views.MainLayout;
 import pl.kskowronski.views.admin.component.PermissionToReportDialog;
-import pl.kskowronski.views.admin.component.ReportDialog;
+import pl.kskowronski.views.admin.component.ReportTestDialog;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -59,7 +59,7 @@ public class ReportAdminView extends VerticalLayout {
     }
 
     private void showDialogWithSql(Report report){
-        var dialog = new ReportDialog(reportRunService, reportService, reportDetailService);
+        var dialog = new ReportTestDialog(reportRunService, reportService, reportDetailService);
         dialog.open(report);
     }
 

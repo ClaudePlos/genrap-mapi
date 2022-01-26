@@ -8,14 +8,10 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.Setter;
 import pl.kskowronski.data.entity.User;
-import pl.kskowronski.data.entity.report.Report;
 import pl.kskowronski.data.entity.report.ReportPermission;
 import pl.kskowronski.data.service.UserService;
-import pl.kskowronski.data.service.admin.report.ReportService;
 import pl.kskowronski.data.service.admin.reportPermission.ReportPermDataProvider;
 import pl.kskowronski.data.service.admin.reportPermission.ReportPermService;
 

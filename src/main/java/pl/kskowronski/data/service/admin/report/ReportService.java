@@ -1,11 +1,19 @@
 package pl.kskowronski.data.service.admin.report;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 import org.vaadin.crudui.crud.CrudListener;
 import pl.kskowronski.data.entity.report.Report;
+import pl.kskowronski.data.entity.report.ReportDetail;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class ReportService implements CrudListener<Report> {
