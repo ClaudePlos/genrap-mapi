@@ -1,5 +1,6 @@
 package pl.kskowronski.data.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,9 +17,12 @@ public class UserService {
         this.repository = repository;
     }
 
+
     public Optional<User> get(Integer id) {
         return repository.findById(id);
     }
+
+    public List<User> findAll() { return repository.findAll(); }
 
     public User update(User entity) {
         return repository.save(entity);

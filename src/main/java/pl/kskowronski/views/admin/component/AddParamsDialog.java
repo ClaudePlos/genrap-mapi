@@ -42,6 +42,10 @@ public class AddParamsDialog extends Dialog {
         setHeight("700px");
         crudDetails = new Crud<>(ReportDetail.class, createEditor());
 
+        crudDetails.addSaveListener( item -> {
+           item.getItem().setSrpRapId(idRap);
+        });
+
         setupGrid();
         setupDataProvider();
 
@@ -95,18 +99,12 @@ public class AddParamsDialog extends Dialog {
 
     private CrudEditor<ReportDetail> createEditor() {
 
-        TextField textRapId = new TextField("RapId");
         TextField textLp = new TextField("Lp");
         ComboBox<ParamType> pType = getParamType();
         TextField textParamName = new TextField("Nazwa parametru");
         TextField textSql       = new TextField("Sql");
 
-        //textRapId.setEnabled(false);
-        textRapId.setValue(idRap.toString());
-        textRapId.setLabel("RapID przepisz: " + idRap.toString());
-
-        FormLayout form = new FormLayout(textRapId, textLp, pType, textParamName, textSql);
-        binder.forField(textRapId).asRequired().bind(ReportDetail::getRapId, ReportDetail::setRapId);
+        FormLayout form = new FormLayout( textLp, pType, textParamName, textSql);
         binder.forField(textLp).asRequired().bind(ReportDetail::getSrpLp, ReportDetail::setSrpLp);
         binder.forField(pType).asRequired().bind(ReportDetail::getType, ReportDetail::setType);
         binder.forField(textParamName).asRequired().bind(ReportDetail::getSrpName, ReportDetail::setSrpName);

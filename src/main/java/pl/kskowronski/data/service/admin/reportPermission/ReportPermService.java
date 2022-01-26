@@ -20,8 +20,13 @@ public class ReportPermService {
         return repo.findAll();
     }
 
-    public List<ReportPermission> findReportPermissionByPermRapIdOrderById(BigDecimal rapId) {
-        return repo.findReportPermissionByPermRapIdOrderById(rapId).get();
+    public BigDecimal findMaxId(){
+        BigDecimal id = repo.findMaxId();
+        return id;
+    }
+
+    public List<ReportPermission> findReportPermissionByPermRapIdOrderByPermId(BigDecimal rapId) {
+        return repo.findReportPermissionByPermRapIdOrderByPermId(rapId).get();
     }
 
     public ReportPermission save(ReportPermission perm) {

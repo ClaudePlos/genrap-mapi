@@ -6,10 +6,13 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import pl.kskowronski.data.entity.report.Report;
+import pl.kskowronski.data.service.UserService;
 import pl.kskowronski.data.service.admin.report.ReportRunService;
 import pl.kskowronski.data.service.admin.report.ReportService;
 import pl.kskowronski.data.service.admin.reportDetail.ReportDetailService;
+import pl.kskowronski.data.service.admin.reportPermission.ReportPermService;
 import pl.kskowronski.views.MainLayout;
+import pl.kskowronski.views.admin.component.PermissionToReportDialog;
 import pl.kskowronski.views.admin.component.ReportDialog;
 
 import javax.annotation.security.RolesAllowed;
@@ -17,16 +20,24 @@ import javax.annotation.security.RolesAllowed;
 @PageTitle("Report")
 @Route(value = "report", layout = MainLayout.class)
 @RolesAllowed("admin")
-public class ReportView  extends VerticalLayout {
+public class ReportAdminView extends VerticalLayout {
 
     private ReportService reportService;
     private ReportRunService reportRunService;
     private ReportDetailService reportDetailService;
+    private ReportPermService reportPermService;
+    private UserService userService;
 
-    public ReportView(ReportService reportService, ReportRunService reportRunService, ReportDetailService reportDetailService) {
+    public ReportAdminView(ReportService reportService
+            , ReportRunService reportRunService
+            , ReportDetailService reportDetailService
+            , ReportPermService reportPermService
+            , UserService userService) {
         this.reportService = reportService;
         this.reportRunService = reportRunService;
         this.reportDetailService = reportDetailService;
+        this.reportPermService = reportPermService;
+        this.userService = userService;
         var crudReport = new GridCrud<>(Report.class, reportService);
         //crudReport.setFindAllOperation(() -> reportService.findAll());
         add(crudReport);
@@ -53,8 +64,8 @@ public class ReportView  extends VerticalLayout {
     }
 
     private void showDialogPermissionToReport(Report report){
-        var dialog = new ReportDialog(reportRunService, reportService, reportDetailService);
-        dialog.open(report);
+        var dialog = new PermissionToReportDialog(reportPermService, userService, report.getId());
+        dialog.open(report.getId());
     }
 
 }

@@ -5,8 +5,9 @@ create table NAP_REPORTS_PERM
             unique,
     PERM_RAP_ID NUMBER,
     PERM_USER_ID NUMBER,
-    PERM_USERNAME VARCHAR2(200),
-    PERM_RAP_NAME VARCHAR2(500)
+    PERM_USERNAME VARCHAR2(200)
 )
     /
+
+
 

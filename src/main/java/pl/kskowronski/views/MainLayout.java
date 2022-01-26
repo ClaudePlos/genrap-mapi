@@ -24,7 +24,7 @@ import java.util.Optional;
 import pl.kskowronski.data.entity.User;
 import pl.kskowronski.security.AuthenticatedUser;
 import pl.kskowronski.views.about.AboutView;
-import pl.kskowronski.views.admin.ReportView;
+import pl.kskowronski.views.admin.ReportAdminView;
 import pl.kskowronski.views.cardlist.CardListView;
 import pl.kskowronski.views.dashboard.DashboardView;
 import pl.kskowronski.views.helloworld.HelloWorldView;
@@ -125,7 +125,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("About", "la la-file", AboutView.class), //
                 new MenuItemInfo("Person Form", "la la-user", PersonFormView.class), //
                 new MenuItemInfo("Dashboard", "la la-chart-area", DashboardView.class), //
-                new MenuItemInfo("(A) Raporty", "la la-chart-area", ReportView.class), //
+                new MenuItemInfo("(A) Raporty", "la la-chart-area", ReportAdminView.class), //
 
         };
         List<RouterLink> links = new ArrayList<>();

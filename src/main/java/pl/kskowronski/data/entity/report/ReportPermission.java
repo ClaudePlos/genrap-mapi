@@ -1,13 +1,12 @@
 package pl.kskowronski.data.entity.report;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import pl.kskowronski.data.entity.User;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "nap_reports")
+@Table(name = "nap_reports_perm")
 public class ReportPermission {
 
     @Id
@@ -21,10 +20,12 @@ public class ReportPermission {
     private BigDecimal permUserId;
 
     @Column(name="PERM_USERNAME")
-    private String permUSername;
+    private String permUsername;
 
-    @Column(name="PERM_RAP_NAME")
-    private String permRapName;
+    @Transient
+    private User user;
+
+
 
     public BigDecimal getPermId() {
         return permId;
@@ -50,19 +51,25 @@ public class ReportPermission {
         this.permUserId = permUserId;
     }
 
-    public String getPermUSername() {
-        return permUSername;
+    public String getPermUsername() {
+        return permUsername;
     }
 
-    public void setPermUSername(String permUSername) {
-        this.permUSername = permUSername;
+    public void setPermUsername(String permUsername) {
+        this.permUsername = permUsername;
     }
 
-    public String getPermRapName() {
-        return permRapName;
+
+    public User getUser() {
+        return user;
     }
 
-    public void setPermRapName(String permRapName) {
-        this.permRapName = permRapName;
+    public void setUser(User user) {
+        this.user = user;
+        this.permUserId = user.getId();
+        if (this.permUsername == null) {
+            this.permUsername = user.getUsername();
+        }
     }
+
 }

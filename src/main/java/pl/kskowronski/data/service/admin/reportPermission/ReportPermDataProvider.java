@@ -27,7 +27,7 @@ public class ReportPermDataProvider extends AbstractBackEndDataProvider<ReportPe
 
     public ReportPermDataProvider(ReportPermService reportPermService, BigDecimal idRap) {
         this.reportPermService = reportPermService;
-        DATABASE = new ArrayList<>(reportPermService.findReportPermissionByPermRapIdOrderById(idRap));
+        DATABASE = new ArrayList<>(reportPermService.findReportPermissionByPermRapIdOrderByPermId(idRap));
     }
 
     private static Predicate<ReportPermission> predicate(CrudFilter filter) {
@@ -114,8 +114,8 @@ public class ReportPermDataProvider extends AbstractBackEndDataProvider<ReportPe
 
     public void persist(ReportPermission item) {
         if (item.getPermId() == null) {
-            Comparator<ReportPermission> comparator = Comparator.comparing( ReportPermission::getPermId );
-            BigDecimal max = DATABASE.stream().max(comparator).get().getPermId();
+            //Comparator<ReportPermission> comparator = Comparator.comparing( ReportPermission::getPermId );
+            BigDecimal max  = reportPermService.findMaxId();
             item.setPermId(max.add(BigDecimal.ONE));
         }
 
