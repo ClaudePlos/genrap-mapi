@@ -26,7 +26,7 @@ public class ReportTestDialog extends Dialog {
     private ReportRunService reportRunService;
     private ReportDetailService reportDetailService;
 
-    private Grid<Map<String, String>> grid = new Grid<>();
+    //private Grid<Map<String, String>> grid = new Grid<>();
     private TextArea textSql = new TextArea();
     private Report report;
 
@@ -66,7 +66,7 @@ public class ReportTestDialog extends Dialog {
         h01.add(buttonRun, buttonParams, buttonSave);
         add(textSql, h01);
         setupParameters();
-        add(grid);
+        add(reportDetailService.gridData);
         open();
     }
 
@@ -77,7 +77,7 @@ public class ReportTestDialog extends Dialog {
     }
 
     private void runSql( String sqlQuery ){
-        grid = reportRunService.runSqlForGrid(sqlQuery, paramList, grid);
+        reportDetailService.gridData= reportRunService.runSqlForGrid(sqlQuery, paramList, reportDetailService.gridData);
     }
 
     private void openDialogAddParams() {
@@ -89,6 +89,7 @@ public class ReportTestDialog extends Dialog {
 
     private void setupParameters() {
         var h01 = new HorizontalLayout();
+        h01.setClassName("h01param");
         paramList  = reportDetailService.findReportDetailBySrpRapId(report.getId());
         paramList.stream().forEach( item -> {
             Component component = reportDetailService.getComponentForParameter( item );

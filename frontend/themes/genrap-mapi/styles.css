@@ -27,3 +27,41 @@
       --lumo-space-xs: 0.1875rem;
 
     }
+
+/* components parameters */
+vaadin-horizontal-layout.h01param {
+      display: initial;
+}
+
+vaadin-button.param {
+      margin: 2px;
+}
+
+a.param {
+      margin: 2px;
+      display: inline-block;
+      padding: 5.5px 20px;
+      font-size: 16px;
+      font-family:  -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      outline: none;
+      color: #fff;
+      background-color: #158443;
+      border: none;
+      border-radius: 0.25em;
+}
+
+vaadin-text-field.param {
+      margin: 2px;
+}
+
+vaadin-date-picker.param {
+      margin: 2px;
+}
+
+/*
+add k.skowronski
+*/
+

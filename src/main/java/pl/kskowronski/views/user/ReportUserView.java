@@ -10,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.vaadin.crudui.crud.impl.GridCrud;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 
 @PageTitle("Twoje raporty")
 @Route(value = "user-reports", layout = MainLayout.class)
+@RouteAlias(value = "", layout = MainLayout.class)
 @RolesAllowed("user")
 public class ReportUserView extends VerticalLayout {
 
@@ -46,8 +48,10 @@ public class ReportUserView extends VerticalLayout {
 
     private List<ReportDetail> paramList;
     private ComboBox<Report> comboListReport;
-    private Grid<Map<String, String>> gridData = new Grid<>();
+    //private Grid<Map<String, String>> gridData = new Grid<>();
 
+    private VerticalLayout v00 = new VerticalLayout();
+    private HorizontalLayout h00 = new HorizontalLayout();
     private HorizontalLayout h01 = new HorizontalLayout();
 
     public ReportUserView(UserService userService, ReportPermService reportPermService
@@ -58,6 +62,9 @@ public class ReportUserView extends VerticalLayout {
         this.reportService = reportService;
         var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user = userService.getByUsername(userDetails.getUsername());
+        setHeight("100%");
+        reportDetailService.gridData = new Grid<>();
+        reportDetailService.gridData.setHeightFull();
 
         comboListReport = getReportListForUser();
 
@@ -70,8 +77,11 @@ public class ReportUserView extends VerticalLayout {
             runReport();
         });
 
+        h01.setClassName("h01param");
+        h00.add(buttonRun);
+        v00.add(comboListReport, h00, h01);
 
-        add(comboListReport, h01, buttonRun, gridData);
+        add(v00, reportDetailService.gridData);
     }
 
     private void getParametersForReport(BigDecimal repId ) {
@@ -82,7 +92,7 @@ public class ReportUserView extends VerticalLayout {
                 addEvenListenerChangeToParameter(component);
                 h01.add(component);
             });
-        add(h01);
+        //add(h01);
     }
 
     private ComboBox<Report> getReportListForUser() {
@@ -122,7 +132,7 @@ public class ReportUserView extends VerticalLayout {
     }
 
     private void runReport() {
-        gridData = reportRunService.runSqlForGrid(comboListReport.getValue().getRapSql(), paramList, gridData);
+        reportDetailService.gridData = reportRunService.runSqlForGrid(comboListReport.getValue().getRapSql(), paramList, reportDetailService.gridData);
     }
 
 }
