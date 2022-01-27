@@ -104,3 +104,24 @@ If you want to remove your whole deployment and start over, run
 ```
 kubectl delete -f kubernetes.yaml
 ```
+
+## added by k.skowronski
+<pre>
+1. mvn clean package -Pproduction
+2. add to \nap-portal-pg-1.0-SNAPSHOT.jar\META-INF\VAADIN\webapp\index.html
+<pre>
+ html lang="en" class="notranslate" translate="no"    <!-- All translators -->
+ meta name="google" content="notranslate"  <!-- Just for google -->
+</pre>
+3. Send from target to 0.97 (tender machine)
+
+On production machine:
+1. If you want add adn build new image:
+   sudo docker build -t genrap-mapi . << dot is important
+
+2. sudo docker run -p 8084:8080 genrap-mapi:latest
+
+3. sudo docker container start ID (id from docker ps -a)
+
+
+</pre>

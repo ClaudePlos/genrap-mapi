@@ -124,7 +124,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Raporty", "la la-globe", ReportUserView.class), //
                 new MenuItemInfo("Card List", "la la-list", CardListView.class), //
                 new MenuItemInfo("About", "la la-file", AboutView.class), //
-                new MenuItemInfo("Person Form", "la la-user", PersonFormView.class), //
+                //new MenuItemInfo("Person Form", "la la-user", PersonFormView.class), //
                 new MenuItemInfo("Dashboard", "la la-chart-area", DashboardView.class), //
                 new MenuItemInfo("(A) Raporty", "la la-chart-area", ReportAdminView.class), //
 

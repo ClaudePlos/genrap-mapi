@@ -23,10 +23,13 @@ import pl.kskowronski.data.entity.SamplePerson;
 import pl.kskowronski.data.service.SamplePersonService;
 import pl.kskowronski.views.MainLayout;
 
+import javax.annotation.security.RolesAllowed;
+
 @PageTitle("Person Form")
 @Route(value = "person-form", layout = MainLayout.class)
 @AnonymousAllowed
 @Uses(Icon.class)
+@RolesAllowed("admin")
 public class PersonFormView extends Div {
 
     private TextField firstName = new TextField("First name");

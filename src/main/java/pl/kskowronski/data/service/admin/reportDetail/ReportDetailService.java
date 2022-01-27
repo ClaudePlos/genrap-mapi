@@ -44,6 +44,11 @@ public class ReportDetailService {
         repo.deleteById(id);
     }
 
+    public BigDecimal findMaxId(){
+        BigDecimal id = repo.findMaxId();
+        return id;
+    }
+
 
     public Component getComponentForParameter(ReportDetail detail) {
 

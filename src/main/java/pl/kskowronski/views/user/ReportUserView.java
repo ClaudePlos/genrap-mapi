@@ -48,6 +48,8 @@ public class ReportUserView extends VerticalLayout {
     private ComboBox<Report> comboListReport;
     private Grid<Map<String, String>> gridData = new Grid<>();
 
+    private HorizontalLayout h01 = new HorizontalLayout();
+
     public ReportUserView(UserService userService, ReportPermService reportPermService
             , ReportService reportService, ReportDetailService reportDetailService, ReportRunService reportRunService) {
         this.reportPermService = reportPermService;
@@ -69,17 +71,17 @@ public class ReportUserView extends VerticalLayout {
         });
 
 
-        add(comboListReport, buttonRun, gridData);
+        add(comboListReport, h01, buttonRun, gridData);
     }
 
     private void getParametersForReport(BigDecimal repId ) {
-       var h01 = new HorizontalLayout();
-       paramList = reportDetailService.findReportDetailBySrpRapId(repId);
-        paramList.stream().forEach( item -> {
-            Component component = reportDetailService.getComponentForParameter( item );
-            addEvenListenerChangeToParameter(component);
-            h01.add(component);
-        });
+        h01.removeAll();
+           paramList = reportDetailService.findReportDetailBySrpRapId(repId);
+            paramList.stream().forEach( item -> {
+                Component component = reportDetailService.getComponentForParameter( item );
+                addEvenListenerChangeToParameter(component);
+                h01.add(component);
+            });
         add(h01);
     }
 

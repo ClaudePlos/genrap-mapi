@@ -11,7 +11,7 @@ import pl.kskowronski.views.MainLayout;
 
 @PageTitle("About")
 @Route(value = "about", layout = MainLayout.class)
-@RolesAllowed("user")
+@RolesAllowed("admin")
 public class AboutView extends VerticalLayout {
 
     public AboutView() {

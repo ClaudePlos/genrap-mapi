@@ -20,7 +20,7 @@ import pl.kskowronski.views.MainLayout;
 
 @PageTitle("Card List")
 @Route(value = "card-list", layout = MainLayout.class)
-@RolesAllowed("user")
+@RolesAllowed("admin")
 public class CardListView extends Div implements AfterNavigationObserver {
 
     Grid<Person> grid = new Grid<>();

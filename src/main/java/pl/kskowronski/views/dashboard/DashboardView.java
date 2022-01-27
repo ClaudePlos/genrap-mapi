@@ -26,7 +26,7 @@ import pl.kskowronski.views.dashboard.ServiceHealth.Status;
 
 @PageTitle("Dashboard")
 @Route(value = "dashboard", layout = MainLayout.class)
-@RolesAllowed("user")
+@RolesAllowed("admin")
 public class DashboardView extends Main {
 
     public DashboardView() {

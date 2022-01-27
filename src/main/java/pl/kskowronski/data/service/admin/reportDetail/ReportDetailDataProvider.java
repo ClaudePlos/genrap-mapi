@@ -119,8 +119,7 @@ public class ReportDetailDataProvider extends AbstractBackEndDataProvider<Report
 
     public void persist(ReportDetail item) {
         if (item.getSrpId() == null) {
-            Comparator<ReportDetail> comparator = Comparator.comparing( ReportDetail::getSrpId );
-            BigDecimal max = DATABASE.stream().max(comparator).get().getSrpId();
+            BigDecimal max  = reportDetailService.findMaxId();
             item.setSrpId(max.add(BigDecimal.ONE));
         }
 
