@@ -92,7 +92,6 @@ public class ReportUserView extends VerticalLayout {
                 addEvenListenerChangeToParameter(component);
                 h01.add(component);
             });
-        //add(h01);
     }
 
     private ComboBox<Report> getReportListForUser() {

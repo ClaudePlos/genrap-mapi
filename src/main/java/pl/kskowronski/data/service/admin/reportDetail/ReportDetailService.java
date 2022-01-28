@@ -1,13 +1,14 @@
 package pl.kskowronski.data.service.admin.reportDetail;
 
+import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -16,12 +17,14 @@ import org.springframework.stereotype.Service;
 import pl.kskowronski.data.entity.report.ParamType;
 import pl.kskowronski.data.entity.report.ReportDetail;
 
-import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 @Service
@@ -34,7 +37,8 @@ public class ReportDetailService {
     }
 
     // main GRID for both Admin and User
-    public Grid<Map<String, String>> gridData;
+    private GridListDataView<Map<String, String>> dataView;
+    public Grid<Map<String, String>> gridData = new Grid<>();
 
     public List<ReportDetail> findAll() {
         return repo.findAll();
@@ -85,17 +89,45 @@ public class ReportDetailService {
            return d;
         }
 
+        if ( detail.getSrpTyp().equals(ParamType.EXCEL.name()) ) {
+            Button a = new Button("EXCEL");
+            a.addClickListener( e -> {
+                Stream<Map<String, String>> data = gridData.getGenericDataView().getItems();
+                data.forEach( i -> {
+                    System.out.println(i);
+                });
+            });
+            return a;
+        }
+
         if ( detail.getSrpTyp().equals(ParamType.CSV.name()) ) {
             var streamResource = new StreamResource("dane.csv",
                     () -> {
                         try {
+                            AtomicReference<String> dataCsv = new AtomicReference<>("");
                             Stream<Map<String, String>> data = gridData.getGenericDataView().getItems();
-                            StringWriter output = new StringWriter();
-                            var beanToCsv = new StatefulBeanToCsvBuilder<Map<String, String>>(output).build();
-                            beanToCsv.write(data);
-                            var contents = output.toString();
-                            return new ByteArrayInputStream(contents.getBytes());
-                        } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
+
+                            AtomicInteger j = new AtomicInteger();
+                            data.forEach( i -> {
+                                if ( j.get() == 0 ){ // Header
+                                    AtomicReference<String> key = new AtomicReference<>("");
+                                    i.entrySet().stream().forEach( e -> {
+                                        key.set(e.getKey());
+                                        dataCsv.set(dataCsv.get() + key.get() + ";");
+                                    });
+                                } else { // Data
+                                    dataCsv.set(dataCsv.get() + "\n");
+                                    AtomicReference<String> value = new AtomicReference<>("");
+                                    i.entrySet().stream().forEach( e -> {
+                                        value.set(e.getValue());
+                                        dataCsv.set(dataCsv.get() + value.get() + ";");
+                                    });
+                                }
+                                j.getAndIncrement();
+                            });
+
+                            return new ByteArrayInputStream(dataCsv.get().getBytes());
+                        } catch (Exception e) {
                             e.printStackTrace();
                             return null;
                         }
@@ -106,8 +138,36 @@ public class ReportDetailService {
             return a;
         }
 
+
+
         return null;
     }
 
+
+
+    private String export(Grid<Map<String, String>> grid) {
+        // Fetch all data from the grid in the current sorted order
+        Stream<Map<String, String>> persons = null;
+
+
+        Set<Map<String, String>> selection = (Set<Map<String, String>>) grid.getDataProvider();
+        if (selection != null && selection.size() > 0) {
+            persons = selection.stream();
+        } else {
+            persons = dataView.getItems();
+            // Alternative approach without DataView
+            // persons = ((DataProvider<Person, String>) grid.getDataProvider()).fetch(createQuery(grid));
+        }
+
+        StringWriter output = new StringWriter();
+        StatefulBeanToCsv<Map<String, String>> writer = new StatefulBeanToCsvBuilder<Map<String, String>>(output).build();
+        try {
+            writer.write(persons);
+        } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
+            output.write("An error occured during writing: " + e.getMessage());
+        }
+
+        return output.toString();
+    }
 
 }
