@@ -6,16 +6,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
+import org.hibernate.query.internal.NativeQueryImpl;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.springframework.stereotype.Service;
 import pl.kskowronski.data.entity.report.ParamType;
 import pl.kskowronski.data.entity.report.ReportDetail;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.Query;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -37,12 +37,13 @@ public class ReportRunService {
             JsonElement element = gson.fromJson(row, JsonElement.class); //Converts the json string to JsonElement without POJO
             JsonObject jsonObj = element.getAsJsonObject(); //Converting JsonElement to JsonObject
 
-            if (j.get() == 0) {
+            if (j.get() == 0) { //Header
                 jsonObj.keySet().stream().forEach(i -> {
                     grid.addColumn(map -> map.get(i)).setHeader(i);
                 });
             }
 
+            //Data
             final Map<String, String> values = new HashMap<>();
             jsonObj.keySet().stream().forEach(i -> {
                 values.put(i, jsonObj.get(i).getAsString());
@@ -55,10 +56,36 @@ public class ReportRunService {
         return grid;
     }
 
+        private String clearSql( String sql ) {
+
+            String[] cellName = sql.split(" ");
+            List<String> list = new ArrayList<String>(Arrays.asList(cellName));
+            List<String> list2 = new ArrayList<String>(Arrays.asList(cellName));
+            int j = 0;
+            for ( int i = 0; i < list.size(); i++){
+
+                if (list.get(i).toUpperCase().equals("DISTINCT") ) {
+                    list2.remove(i-j);
+                    j++;
+                }
+
+                if (list.get(i).toUpperCase().equals("AS") ) {
+                    list2.remove(i-j);
+                    list2.remove(i-j-1);
+                    j++; j++;
+                }
+
+
+            }
+
+
+            return String.join( " ",list2.toArray(new String[0]));
+        }
 
         private JsonArray getDataFromSqlQuery(String sqlQuery, List<ReportDetail> paramList) {
         Gson gson = new Gson();
-        String[] cellName = sqlQuery.split(" ");
+        String parseSqlCellName = clearSql(sqlQuery);
+        String[] cellName = parseSqlCellName.split(" ");
         String sql= sqlQuery;
 
         //put parameters to sql
@@ -92,7 +119,6 @@ public class ReportRunService {
         return null;
 
     }
-
 
 
 }
