@@ -103,7 +103,7 @@ public class ReportUserView extends VerticalLayout {
             listReport.add( reportService.getReportById(item.getPermRapId()) );
         });
         List<Report> sortedReports = listReport.stream()
-                .sorted(Comparator.comparing(Report::getRapName).reversed())
+                .sorted(Comparator.comparing(Report::getRapName))
                 .collect(Collectors.toList());
         selectReport.setItems( sortedReports );
         selectReport.setItemLabelGenerator(Report::getRapName);

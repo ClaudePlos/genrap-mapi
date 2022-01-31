@@ -75,8 +75,25 @@ public class ReportRunService {
                     j++; j++;
                 }
 
+                if (list.get(i).toUpperCase().equals("FROM") ) {
+                    break;
+                }
 
             }
+
+            for ( int i = 0; i < list2.size(); i++){
+
+                if (list2.get(i).contains("\"")) {
+                    int index = list2.indexOf(list2.get(i));
+                    list2.set( index, list2.get(i).replace("\"","") );
+                }
+
+                if (list2.get(i).toUpperCase().equals("FROM") ) {
+                    break;
+                }
+            }
+
+
 
 
             return String.join( " ",list2.toArray(new String[0]));
