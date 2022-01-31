@@ -106,6 +106,7 @@ public class ReportDetailService {
                         try {
                             AtomicReference<String> dataCsv = new AtomicReference<>("");
                             Stream<Map<String, String>> data = gridData.getGenericDataView().getItems();
+                            AtomicReference<String> firstRow = new AtomicReference<>("");
 
                             AtomicInteger j = new AtomicInteger();
                             data.forEach( i -> {
@@ -114,8 +115,12 @@ public class ReportDetailService {
                                     i.entrySet().stream().forEach( e -> {
                                         key.set(e.getKey());
                                         dataCsv.set(dataCsv.get() + key.get() + ";");
+                                        firstRow.set(firstRow.get() + e.getValue() + ";" );
                                     });
                                 } else { // Data
+                                    if ( j.get() == 1) {
+                                        dataCsv.set(dataCsv.get() + "\n" +  firstRow.get());
+                                    }
                                     dataCsv.set(dataCsv.get() + "\n");
                                     AtomicReference<String> value = new AtomicReference<>("");
                                     i.entrySet().stream().forEach( e -> {
