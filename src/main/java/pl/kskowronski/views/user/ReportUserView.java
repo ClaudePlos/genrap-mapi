@@ -29,6 +29,7 @@ import javax.annotation.security.RolesAllowed;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -101,7 +102,10 @@ public class ReportUserView extends VerticalLayout {
         listUserReports.stream().forEach( item -> {
             listReport.add( reportService.getReportById(item.getPermRapId()) );
         });
-        selectReport.setItems( listReport );
+        List<Report> sortedReports = listReport.stream()
+                .sorted(Comparator.comparing(Report::getRapName).reversed())
+                .collect(Collectors.toList());
+        selectReport.setItems( sortedReports );
         selectReport.setItemLabelGenerator(Report::getRapName);
         selectReport.setLabel("Wybierz raport:");
         return selectReport;
