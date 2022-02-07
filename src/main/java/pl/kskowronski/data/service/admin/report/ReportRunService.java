@@ -6,15 +6,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
-import org.hibernate.query.internal.NativeQueryImpl;
-import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.springframework.stereotype.Service;
 import pl.kskowronski.data.entity.report.ParamType;
 import pl.kskowronski.data.entity.report.ReportDetail;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -135,6 +132,56 @@ public class ReportRunService {
 
         return null;
 
+    }
+
+
+    public List<Map<String, String>> runSqlQueryForList(String sqlQuery) {
+        Gson gson = new Gson();
+        String parseSqlCellName = clearSql(sqlQuery);
+        String[] cellName = parseSqlCellName.split(" ");
+
+        try {
+            List<Object[]> result = em.createNativeQuery(sqlQuery).getResultList();
+
+            JsonArray jsonArray = new Gson().fromJson(gson.toJson(result), JsonArray.class);
+            JsonArray jsonEnd = new JsonArray();
+            jsonArray.forEach(item -> {
+                JsonObject j = new JsonObject();
+                for (int i=0; i<jsonArray.get(0).getAsJsonArray().size(); i++) {
+                    j.add(cellName[i+1].replace(",",""), item.getAsJsonArray().get(i));
+                }
+                jsonEnd.add(j);
+            });
+
+            return parseJsonToList(jsonEnd);
+
+        } catch (Exception ex) {
+            Notification.show(ex.getMessage());
+        }
+
+        return null;
+
+    }
+
+    private List<Map<String, String>> parseJsonToList( JsonArray response ) {
+        Gson gson = new Gson();
+        List<Map<String, String>> items = new ArrayList<>();
+
+        AtomicInteger j = new AtomicInteger();
+        response.forEach(row -> {
+            JsonElement element = gson.fromJson(row, JsonElement.class); //Converts the json string to JsonElement without POJO
+            JsonObject jsonObj = element.getAsJsonObject(); //Converting JsonElement to JsonObject
+
+            //Data
+            final Map<String, String> values = new HashMap<>();
+            jsonObj.keySet().stream().forEach(i -> {
+                values.put(i, jsonObj.get(i).getAsString());
+            });
+            items.add(values);
+            j.getAndIncrement();
+        });
+
+        return items;
     }
 
 

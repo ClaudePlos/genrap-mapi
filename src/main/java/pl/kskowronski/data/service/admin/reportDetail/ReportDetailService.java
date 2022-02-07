@@ -6,6 +6,7 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
@@ -16,7 +17,10 @@ import com.vaadin.flow.server.StreamResource;
 import org.springframework.stereotype.Service;
 import pl.kskowronski.data.entity.report.ParamType;
 import pl.kskowronski.data.entity.report.ReportDetail;
+import pl.kskowronski.data.service.admin.report.ReportRunService;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -30,10 +34,16 @@ import java.util.stream.Stream;
 @Service
 public class ReportDetailService {
 
+    @PersistenceContext
+    private EntityManager em;
+
+    private ReportRunService reportRunService;
+
     private final ReportDetailRepo repo;
 
-    public ReportDetailService(ReportDetailRepo repo) {
+    public ReportDetailService(ReportDetailRepo repo, ReportRunService reportRunService) {
         this.repo = repo;
+        this.reportRunService = reportRunService;
     }
 
     // main GRID for both Admin and User
@@ -89,6 +99,16 @@ public class ReportDetailService {
            return d;
         }
 
+        if ( detail.getSrpTyp().equals(ParamType.LISTA.name()) ) {
+            ComboBox<Map<String, String>> combo = new ComboBox<>();
+            List<Map<String, String>> list = reportRunService.runSqlQueryForList(detail.getSrpSql());
+            combo.setItems( list );
+            //combo.setItemLabelGenerator( );
+            combo.setLabel(detail.getSrpName());
+            return combo;
+        }
+
+        //TODO
         if ( detail.getSrpTyp().equals(ParamType.EXCEL.name()) ) {
             Button a = new Button("EXCEL");
             a.addClickListener( e -> {
